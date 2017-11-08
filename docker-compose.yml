@@ -1,0 +1,150 @@
+# Georg Walther (contact@georg.io)
+
+version: '3.4'
+
+networks:
+  hadoop_net:
+    driver: bridge
+
+services:
+
+  hdfs-name-node:
+    image: ${hadoop_image_name}:${image_version}
+    hostname: hdfs-name-node
+    networks:
+      - hadoop_net
+    command: >
+      bash -c '
+        yes | ${hadoop_root}/bin/hdfs namenode -format &&
+        ${hadoop_root}/bin/hdfs namenode
+      '
+    ports:
+      - "50070:50070"
+
+  yarn-resource-manager:
+    image: ${hadoop_image_name}:${image_version}
+    hostname: yarn-resource-manager
+    networks:
+      - hadoop_net
+    command: >
+      bash -c '
+        ${hadoop_root}/bin/yarn resourcemanager
+      '
+    expose:
+      - "8032"
+    ports:
+      - "8088:8088"
+
+  hadoop-node-0:
+    image: ${hadoop_image_name}:${image_version}
+    hostname: hadoop-node-0
+    networks:
+      - hadoop_net
+    command: >
+      bash -c '
+        ${hadoop_root}/bin/hdfs datanode &
+        ${hadoop_root}/bin/yarn nodemanager
+      '
+    ports:
+      - "8042:8042"
+
+  hadoop-node-1:
+    image: ${hadoop_image_name}:${image_version}
+    hostname: hadoop-node-1
+    networks:
+      - hadoop_net
+    command: >
+      bash -c '
+        ${hadoop_root}/bin/hdfs datanode &
+        ${hadoop_root}/bin/yarn nodemanager
+      '
+    ports:
+      - "8043:8042"
+
+  hadoop-node-2:
+    image: ${hadoop_image_name}:${image_version}
+    hostname: hadoop-node-2
+    networks:
+      - hadoop_net
+    command: >
+      bash -c '
+        ${hadoop_root}/bin/hdfs datanode &
+        ${hadoop_root}/bin/yarn nodemanager
+      '
+    ports:
+      - "8044:8042"
+
+  yarn-web-app-proxy:
+    image: ${hadoop_image_name}:${image_version}
+    hostname: yarn-web-app-proxy
+    networks:
+      - hadoop_net
+    command: >
+      bash -c '
+        ${hadoop_root}/bin/yarn proxyserver
+      '
+
+  map-reduce-job-history:
+    image: ${hadoop_image_name}:${image_version}
+    hostname: map-reduce-job-history
+    networks:
+      - hadoop_net
+    command: >
+      bash -c '
+        ${hadoop_root}/bin/mapred historyserver
+      '
+    ports:
+      - "19888:19888"
+
+  hive-hiveserver2:
+    image: ${hive_image_name}:${image_version}
+    hostname: hive-hiveserver2
+    networks:
+      - hadoop_net
+    command: >
+      bash -c '
+        ${hadoop_root}/bin/hadoop fs -mkdir -p /tmp;
+        ${hadoop_root}/bin/hadoop fs -mkdir -p /user/hive/warehouse;
+        ${hadoop_root}/bin/hadoop fs -chmod g+w /tmp;
+        ${hadoop_root}/bin/hadoop fs -chmod g+w /user/hive/warehouse;
+        ${hive_root}/bin/hive --service hiveserver2
+      '
+    restart: on-failure  # avoid startup errors when HDFS namenode is not yet ready
+    ports:
+      - "10000:10000"
+      - "10002:10002"
+    depends_on:
+      - hdfs-name-node
+      - hadoop-node-0
+      - hadoop-node-1
+      - hadoop-node-2
+
+  hive-metastore-database:
+    image: postgres:${postgres_version}
+    hostname: hive-metastore-database
+    networks:
+      - hadoop_net
+    depends_on:
+      - hive-hiveserver2
+
+  hive-metastore-server:
+    image: ${hive_image_name}:${image_version}
+    hostname: hive-metastore-server
+    networks:
+      - hadoop_net
+    command: >
+      bash -c '
+        ${hive_root}/bin/hive --service metastore
+      '
+    depends_on:
+      - hive-metastore-database
+
+  hue:
+    image: ${hue_image_name}:${image_version}
+    hostname: hue
+    networks:
+      - hadoop_net
+    ports:
+      - "8888:8888"
+    depends_on:
+      - hive-hiveserver2

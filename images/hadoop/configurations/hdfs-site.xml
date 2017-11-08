@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>dfs.namenode.name.dir</name>
+        <value>/hdfs_logs</value>
+    </property>
+    <property>
+        <name>dfs.datanode.data.dir</name>
+        <value>/hdfs_data</value>
+    </property>
+    <property>
+        <name>dfs.webhdfs.enabled</name>
+        <value>true</value>
+        <description>Enabled for Hue</description>
+    </property>
+</configuration>

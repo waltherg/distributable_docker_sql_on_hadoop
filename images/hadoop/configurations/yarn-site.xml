@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+
+<configuration>
+    <property>
+        <name>yarn.resourcemanager.hostname</name>
+        <value>yarn-resource-manager</value>
+    </property>
+    <property>
+        <name>yarn.web-proxy.address</name>
+        <value>yarn-web-app-proxy</value>
+    </property>
+</configuration>
