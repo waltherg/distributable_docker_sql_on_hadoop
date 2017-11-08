@@ -126,6 +126,7 @@ The HBase components are:
 #### References
 
 - [HBase documentation](https://hbase.apache.org/book.html)
+- [HBase distributed mode](https://hbase.apache.org/book.html#fully_dist)
 
 ### Yet another resource negotiator (YARN)
 
