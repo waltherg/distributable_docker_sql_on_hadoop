@@ -144,12 +144,11 @@ The YARN components are:
     - Run one per compute node
     - Run multiple compute nodes to scale out computing power
 
-**
+**Note**:
 Where possible we want jobs that we submit to the cluster (e.g. MapReduce jobs)
 to run on data stored locally on the executing host.
 To this end we will start up the aforementioned HDFS data node service and
 YARN node manager concurrently on a given host and call these hosts `hadoop-node`s.
-**
 
 The resource manager offers a management and monitoring GUI at
 
