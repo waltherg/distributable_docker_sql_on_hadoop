@@ -32,3 +32,15 @@ docker build \
     .
 
 cd $cwd
+
+cd ./images/hbase
+docker build \
+    --tag $hbase_image_name:$image_version \
+    --build-arg hadoop_image_name=$hadoop_image_name \
+    --build-arg image_version=$image_version \
+    --build-arg apache_mirror=$apache_mirror \
+    --build-arg hbase_version=$hbase_version \
+    --build-arg hbase_root=$hbase_root \
+    .
+
+cd $cwd
