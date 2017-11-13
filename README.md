@@ -207,10 +207,28 @@ decides in a leader/follower fashion what the current consensus state is:
 - ZooKeeper server
     - Run three servers so that a majority / quorum can be found in replicated mode
 
+To play around with ZooKeeper, connect to it via the ZooKeeper CLI:
+
+    $ source env
+    $ docker run -ti --network distributabledockersqlonhadoop_hadoop_net \
+      --rm ${zookeeper_image_name}:${image_version} \
+      bash -c '$ZOOKEEPER_HOME/bin/zkCli.sh -server zookeeper-0,zookeeper-1,zookeeper-2'
+
+Type `help` for command suggestions, e.g. inspect the root znode where you should see
+e.g. that HBase has started populating ZooKeeper automatically:
+
+    $ [zk: zookeeper-0,zookeeper-1,zookeeper-2(CONNECTED) 0] ls /
+      [zookeeper, hbase]
+
+Press `Ctrl+D` to quit the CLI.
+
 #### References
 
 - [Replicated mode quickstart](
   https://zookeeper.apache.org/doc/r3.1.2/zookeeperStarted.html#sc_RunningReplicatedZooKeeper
+)
+- [First steps with ZooKeeper CLI](
+  https://zookeeper.apache.org/doc/r3.3.3/zookeeperStarted.html#sc_ConnectingToZooKeeper
 )
 
 ### Spark
