@@ -210,11 +210,19 @@ services:
       - hadoop_net
     ports:
       - "16010:16010"
+      - "16011:16011"
+    expose:
+      - "9090"
     command: >
       bash -c '
         ${hbase_root}/bin/start-hbase.sh;
+        ${hbase_root}/bin/hbase-daemon.sh start thrift -p 9090 --infoport 16011;
         sleep infinity
       '
+    depends_on:
+      - zookeeper-0
+      - zookeeper-1
+      - zookeeper-2
 
   hbase-regionserver-0:
     image: ${hbase_image_name}:${image_version}
@@ -231,6 +239,8 @@ services:
         service ssh start;
         sleep infinity
       '
+    depends_on:
+      - hbase-master
 
   hbase-regionserver-1:
     image: ${hbase_image_name}:${image_version}
@@ -247,6 +257,8 @@ services:
         service ssh start;
         sleep infinity
       '
+    depends_on:
+      - hbase-master
 
   hbase-regionserver-2:
     image: ${hbase_image_name}:${image_version}
@@ -263,3 +275,5 @@ services:
         service ssh start;
         sleep infinity
       '
+    depends_on:
+      - hbase-master
