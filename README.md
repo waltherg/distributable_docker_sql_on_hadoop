@@ -184,7 +184,7 @@ We will run ZooKeeper in replicated mode where an ensemble of ZooKeeper servers
 decides in a leader/follower fashion what the current consensus state is:
 
 - ZooKeeper server
-    - Run three servers so that a majority can be found in replicated mode
+    - Run three servers so that a majority / quorum can be found in replicated mode
 
 #### References
 
