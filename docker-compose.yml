@@ -162,8 +162,9 @@ services:
     command: >
       bash -c '
         service ssh start;
-        zkServer.sh start;
-        sleep infinity
+        mkdir -p /var/lib/zookeeper;
+        echo 1 > /var/lib/zookeeper/myid;
+        zkServer.sh start-foreground
       '
 
   zookeeper-1:
@@ -179,8 +180,9 @@ services:
     command: >
       bash -c '
         service ssh start;
-        zkServer.sh start;
-        sleep infinity
+        mkdir -p /var/lib/zookeeper;
+        echo 2 > /var/lib/zookeeper/myid;
+        zkServer.sh start-foreground
       '
 
   zookeeper-2:
@@ -196,8 +198,9 @@ services:
     command: >
       bash -c '
         service ssh start;
-        zkServer.sh start;
-        sleep infinity
+        mkdir -p /var/lib/zookeeper;
+        echo 3 > /var/lib/zookeeper/myid;
+        zkServer.sh start-foreground
       '
 
   hbase-master:
