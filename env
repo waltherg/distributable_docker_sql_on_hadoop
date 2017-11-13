@@ -12,3 +12,6 @@ export hue_image_name=waltherg_hue
 export hue_root=/hue
 export image_version=v0.1
 export postgres_version=10.0
+export zookeeper_image_name=waltherg_zookeeper
+export zookeeper_version=3.4.11
+export zookeeper_root=/zookeeper

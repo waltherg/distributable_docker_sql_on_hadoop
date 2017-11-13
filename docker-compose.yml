@@ -148,3 +148,115 @@ services:
       - "8888:8888"
     depends_on:
       - hive-hiveserver2
+
+  zookeeper-0:
+    image: ${zookeeper_image_name}:${image_version}
+    hostname: zookeeper-0
+    networks:
+      - hadoop_net
+    expose:
+      - "22"
+      - "2181"
+      - "2888"
+      - "3888"
+    command: >
+      bash -c '
+        service ssh start;
+        zkServer.sh start;
+        sleep infinity
+      '
+
+  zookeeper-1:
+    image: ${zookeeper_image_name}:${image_version}
+    hostname: zookeeper-1
+    networks:
+      - hadoop_net
+    expose:
+      - "22"
+      - "2181"
+      - "2888"
+      - "3888"
+    command: >
+      bash -c '
+        service ssh start;
+        zkServer.sh start;
+        sleep infinity
+      '
+
+  zookeeper-2:
+    image: ${zookeeper_image_name}:${image_version}
+    hostname: zookeeper-2
+    networks:
+      - hadoop_net
+    expose:
+      - "22"
+      - "2181"
+      - "2888"
+      - "3888"
+    command: >
+      bash -c '
+        service ssh start;
+        zkServer.sh start;
+        sleep infinity
+      '
+
+  hbase-master:
+    image: ${hbase_image_name}:${image_version}
+    hostname: hbase-master
+    networks:
+      - hadoop_net
+    ports:
+      - "16010:16010"
+    command: >
+      bash -c '
+        ${hbase_root}/bin/start-hbase.sh;
+        sleep infinity
+      '
+
+  hbase-regionserver-0:
+    image: ${hbase_image_name}:${image_version}
+    hostname: hbase-regionserver-0
+    networks:
+      - hadoop_net
+    ports:
+      - "16030:16030"
+    expose:
+      - "22"
+      - "16020"
+    command: >
+      bash -c '
+        service ssh start;
+        sleep infinity
+      '
+
+  hbase-regionserver-1:
+    image: ${hbase_image_name}:${image_version}
+    hostname: hbase-regionserver-1
+    networks:
+      - hadoop_net
+    ports:
+      - "16031:16030"
+    expose:
+      - "22"
+      - "16020"
+    command: >
+      bash -c '
+        service ssh start;
+        sleep infinity
+      '
+
+  hbase-regionserver-2:
+    image: ${hbase_image_name}:${image_version}
+    hostname: hbase-regionserver-2
+    networks:
+      - hadoop_net
+    ports:
+      - "16032:16030"
+    expose:
+      - "22"
+      - "16020"
+    command: >
+      bash -c '
+        service ssh start;
+        sleep infinity
+      '

@@ -116,17 +116,23 @@ The HBase components are:
     - Coordinates the HBase cluster
     - Load balances data between the region servers
     - Handles region server failure
-- Region server
+- Region servers
     - Store data pertaining to a given region (shard / partition of a table)
     - Respond to client requests directly - no need to go through HMaster for
       data requests
     - Run multiple of these (usually one region server service per physical host)
       to scale out data sizes that can be handled
 
+In a production environment we would also start up an
+HMaster backup server which our HBase cluster could
+use as a fallback in case the original HMaster server failed.
+
 #### References
 
 - [HBase documentation](https://hbase.apache.org/book.html)
 - [HBase distributed mode](https://hbase.apache.org/book.html#fully_dist)
+- [HBase fully distributed mode details](https://hbase.apache.org/book.html#quickstart_fully_distributed)
+- [Configure ZooKeeper for HBase](https://hbase.apache.org/book.html#zookeeper)
 
 ### Yet another resource negotiator (YARN)
 

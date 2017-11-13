@@ -1,0 +1,7 @@
+Host zookeeper-*
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
+
+Host hbase-regionserver-*
+   StrictHostKeyChecking no
+   UserKnownHostsFile=/dev/null
