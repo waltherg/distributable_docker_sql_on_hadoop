@@ -26,7 +26,6 @@ cd $cwd
 
 cd ./images/hue
 docker build \
-    --no-cache \
     --tag $hue_image_name:$image_version \
     --build-arg hue_root=$hue_root \
     .
