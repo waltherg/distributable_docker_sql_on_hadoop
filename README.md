@@ -75,7 +75,7 @@ In a separate terminal you can now check the state of the cluster containers thr
 
     $ docker ps
 
-*Note*: When experimenting with the cluster you may need to start
+**Note**: When experimenting with the cluster you may need to start
 over with a clean slate. To this end, remove all containers and related volumes:
 
     $ docker-compose rm -sv
