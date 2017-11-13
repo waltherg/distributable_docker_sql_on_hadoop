@@ -132,12 +132,28 @@ In a production environment we would also start up an
 HMaster backup server which our HBase cluster could
 use as a fallback in case the original HMaster server failed.
 
+Our HBase cluster provides the following web apps for monitoring:
+
+- [HMaster](http://localhost:16010)
+- [HMaster Thrift server](http://localhost:16011)
+- [HBase Regionserver 0](http://localhost:16030)
+- [HBase Regionserver 1](http://localhost:16031)
+- [HBase Regionserver 2](http://localhost:16032)
+
+Explore our HBase cluster with the HBase shell (quit the shell by pressing `Ctr+D`):
+
+    $ source env
+    $ docker run -ti --network distributabledockersqlonhadoop_hadoop_net --rm \
+      ${hbase_image_name}:${image_version} bash -c '$HBASE_HOME/bin/hbase shell'
+
 #### References
 
 - [HBase documentation](https://hbase.apache.org/book.html)
 - [HBase distributed mode](https://hbase.apache.org/book.html#fully_dist)
 - [HBase fully distributed mode details](https://hbase.apache.org/book.html#quickstart_fully_distributed)
 - [Configure ZooKeeper for HBase](https://hbase.apache.org/book.html#zookeeper)
+- [HBase shell](http://hbase.apache.org/book.html#shell)
+- [HBase shell exercises](http://hbase.apache.org/book.html#shell_exercises)
 
 ### Yet another resource negotiator (YARN)
 
