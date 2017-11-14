@@ -157,6 +157,13 @@ Explore our HBase cluster with the HBase shell (quit the shell by pressing `Ctr+
     $ docker run -ti --network distributabledockersqlonhadoop_hadoop_net --rm \
       ${hbase_image_name}:${image_version} bash -c '$HBASE_HOME/bin/hbase shell'
 
+**Note**: I have experienced issues with the master not being able to initialize
+in the given setup. This would manifest itself when attempting to execute commands
+in the HBase shell. Further, logs would indicate a communication sequence mismatch between
+the ZooKeeper ensemble and one or multiple HBase components.
+To resolve this issue for now try restarting the Docker compose ensemble - also
+consider removing all containers and their volumes as described above.
+
 #### References
 
 - [HBase documentation](https://hbase.apache.org/book.html)
