@@ -60,3 +60,15 @@ docker build \
     .
 
 cd $cwd
+
+cd ./images/spark
+docker build \
+    --tag $spark_image_name:$image_version \
+    --build-arg hadoop_image_name=$hadoop_image_name \
+    --build-arg image_version=$image_version \
+    --build-arg apache_mirror=$apache_mirror \
+    --build-arg spark_version=$spark_version \
+    --build-arg spark_root=$spark_root \
+    .
+
+cd $cwd

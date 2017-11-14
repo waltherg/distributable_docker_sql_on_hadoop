@@ -262,7 +262,7 @@ where code is executed against against the same set of data multiple times.
 
 We will run Spark in cluster mode where a SparkContext object instantiated
 in the user application connects to a cluster manager which
-delegates sends the application code to one or multiple executors.
+sends the application code to one or multiple executors.
 As cluster manager we choose YARN over its possible alternatives since
 we already run it for other services of our system (alternatives are Spark's own
 cluster manager and Mesos).
@@ -273,9 +273,32 @@ The executor processes are run on worker nodes:
     - Node in the Spark cluster that can run application code
     - Run multiple of these to scale out available computing power
 
+To launch a sample Spark application on our Hadoop cluster execute the following
+
+    $ source env
+    $ docker run -ti --network distributabledockersqlonhadoop_hadoop_net --rm \
+      ${spark_image_name}:${image_version} \
+      bash -c '
+        $SPARK_HOME/bin/spark-submit \
+        --class org.apache.spark.examples.SparkPi \
+        --master yarn \
+        --deploy-mode cluster \
+        --driver-memory 4g \
+        --executor-memory 2g \
+        --executor-cores 1 \
+        $SPARK_HOME/examples/jars/spark-examples*.jar \
+        10
+      '
+
+Check the YARN resource manager web interface for information on the Spark application:
+
+[http://localhost:8088/cluster/apps](http://localhost:8088/cluster/apps)
+
 #### References
 
 - [Spark cluster mode](http://spark.apache.org/docs/latest/cluster-overview.html)
+- [Running Spark on YARN](http://spark.apache.org/docs/latest/running-on-yarn.html)
+- [Using and configuring Hadoop-free Spark build](https://spark.apache.org/docs/latest/hadoop-provided.html)
 
 ### Tez
 
