@@ -10,4 +10,14 @@
         <name>yarn.web-proxy.address</name>
         <value>yarn-web-app-proxy</value>
     </property>
+    <property>
+        <name>yarn.nodemanager.vmem-check-enabled</name>
+        <value>false</value>
+        <description>
+            Do not set this property to false in production
+            environments! Just setting this to false here
+            to avoid managing application isolation for the
+            toy examples we will run on this cluster.
+        </description>
+    </property>
 </configuration>

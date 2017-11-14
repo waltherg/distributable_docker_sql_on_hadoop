@@ -290,7 +290,43 @@ To launch a sample Spark application on our Hadoop cluster execute the following
         10
       '
 
-Check the YARN resource manager web interface for information on the Spark application:
+To run an interactive PySpark session and a sample PySpark application therein:
+
+    $ source env
+    $ docker run -ti --network distributabledockersqlonhadoop_hadoop_net --rm \
+      ${spark_image_name}:${image_version} \
+      bash -c '
+        $SPARK_HOME/bin/pyspark \
+        --master yarn \
+        --deploy-mode client
+      '
+
+    Python 3.6.3 (default, Oct  3 2017, 21:45:48)
+    [GCC 7.2.0] on linux
+    Type "help", "copyright", "credits" or "license" for more information.
+    Setting default log level to "WARN".
+    To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+    17/11/14 14:06:30 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+    Welcome to
+          ____              __
+         / __/__  ___ _____/ /__
+        _\ \/ _ \/ _ `/ __/  '_/
+       /__ / .__/\_,_/_/ /_/\_\   version 2.2.0
+          /_/
+
+    Using Python version 3.6.3 (default, Oct  3 2017 21:45:48)
+    SparkSession available as 'spark'.
+
+    >>> import random
+    >>> NUM_SAMPLES = 1000000
+    >>> def inside(p):
+            x, y = random.random(), random.random()
+            return x*x + y*y < 1
+    >>> count = sc.parallelize(range(0, NUM_SAMPLES)).filter(inside).count()
+    >>> print('Pi is roughly {}'.format((4.0 * count / NUM_SAMPLES)))
+    Pi is roughly 3.14496
+
+Check the YARN resource manager web interface for information on your Spark applications:
 
 [http://localhost:8088/cluster/apps](http://localhost:8088/cluster/apps)
 
@@ -299,6 +335,7 @@ Check the YARN resource manager web interface for information on the Spark appli
 - [Spark cluster mode](http://spark.apache.org/docs/latest/cluster-overview.html)
 - [Running Spark on YARN](http://spark.apache.org/docs/latest/running-on-yarn.html)
 - [Using and configuring Hadoop-free Spark build](https://spark.apache.org/docs/latest/hadoop-provided.html)
+- [Spark examples (note Python 2 syntax - we run Python 3 here)](https://spark.apache.org/examples.html)
 
 ### Tez
 

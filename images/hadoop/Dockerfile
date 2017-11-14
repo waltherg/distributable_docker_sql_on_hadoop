@@ -22,7 +22,9 @@ RUN echo "Install required system packages ..." \
     && apt-get --yes install \
         openjdk-8-jre \
         openssh-client \
-        wget
+        python3 \
+        wget \
+    && ln -s /usr/bin/python3 /usr/bin/python
 
 RUN echo "Download and extract Hadoop source ..." \
     && wget ${apache_mirror}/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz \
