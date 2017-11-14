@@ -132,6 +132,17 @@ In a production environment we would also start up an
 HMaster backup server which our HBase cluster could
 use as a fallback in case the original HMaster server failed.
 
+Further note that HBase provides a cluster startup script
+that can be executed on the master to bring up the entire cluster:
+
+    $ $HBASE_HOME/bin/start-hbase.sh
+
+When executing this on the master, the master service logs
+onto the servers designated as region servers (via SSH) where
+it starts the corresponding region server services.
+In our `docker-compose.yml` we start the master and region server
+services separately in each container to get explicit logging in stdout.
+
 Our HBase cluster provides the following web apps for monitoring:
 
 - [HMaster](http://localhost:16010)
