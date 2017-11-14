@@ -222,6 +222,7 @@ services:
       - zookeeper-0
       - zookeeper-1
       - zookeeper-2
+    restart: on-failure
 
   hbase-regionserver-0:
     image: ${hbase_image_name}:${image_version}
