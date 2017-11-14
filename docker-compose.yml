@@ -215,9 +215,8 @@ services:
       - "9090"
     command: >
       bash -c '
-        ${hbase_root}/bin/start-hbase.sh;
         ${hbase_root}/bin/hbase-daemon.sh start thrift -p 9090 --infoport 16011;
-        sleep infinity
+        ${hbase_root}/bin/hbase master start
       '
     depends_on:
       - zookeeper-0
@@ -237,7 +236,7 @@ services:
     command: >
       bash -c '
         service ssh start;
-        sleep infinity
+        ${hbase_root}/bin/hbase regionserver start
       '
     depends_on:
       - hbase-master
@@ -255,7 +254,7 @@ services:
     command: >
       bash -c '
         service ssh start;
-        sleep infinity
+        ${hbase_root}/bin/hbase regionserver start
       '
     depends_on:
       - hbase-master
@@ -273,7 +272,7 @@ services:
     command: >
       bash -c '
         service ssh start;
-        sleep infinity
+        ${hbase_root}/bin/hbase regionserver start
       '
     depends_on:
       - hbase-master
