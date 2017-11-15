@@ -16,13 +16,13 @@ out the various services explicitly in the accompanying Docker Compose file.
   * [MapReduce Job History Server](#mapreduce-job-history-server)
   * [ZooKeeper](#zookeeper)
   * [Spark](#spark)
+  * [Spark SQL](#spark-sql)
   * [Tez](#tez)
   * [Hive](#hive)
   * [Hue](#hue)
   * [Impala](#impala)
   * [Presto](#presto)
   * [Drill](#drill)
-  * [Spark SQL](#spark-sql)
   * [Phoenix](#phoenix)
 * [Moving towards production](#moving-towards-production)
 
@@ -337,6 +337,135 @@ Check the YARN resource manager web interface for information on your Spark appl
 - [Using and configuring Hadoop-free Spark build](https://spark.apache.org/docs/latest/hadoop-provided.html)
 - [Spark examples (note Python 2 syntax - we run Python 3 here)](https://spark.apache.org/examples.html)
 
+### Spark SQL
+
+Spark SQL is a Spark module for optimized processing of structured data.
+It differs from Spark's Resilient Distributed Dataset (RDD) API.
+In the context of Spark SQL DataFrames are an important data structure:
+Spark DataFrames are distributed collections of data organized into named columns.
+
+To play around with Spark DataFrames and Spark SQL,
+let us load the classical [Iris data set](https://archive.ics.uci.edu/ml/datasets/iris)
+into our Hadoop cluster:
+
+    $ source env
+    $ docker run -ti --network distributabledockersqlonhadoop_hadoop_net --rm \
+      ${hadoop_image_name}:${image_version} bash -c '
+        wget https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data;
+        $HADOOP_HOME/bin/hadoop fs -mkdir -p data;
+        $HADOOP_HOME/bin/hadoop fs -put iris.data data/iris.data
+      '
+
+Start an interactive PySpark session and read the Iris data set from HDFS:
+
+    $ source env
+    $ docker run -ti --network distributabledockersqlonhadoop_hadoop_net --rm \
+      ${spark_image_name}:${image_version} \
+      bash -c '
+        $SPARK_HOME/bin/pyspark \
+        --master yarn \
+        --deploy-mode client
+      '
+
+    Welcome to
+          ____              __
+         / __/__  ___ _____/ /__
+        _\ \/ _ \/ _ `/ __/  '_/
+       /__ / .__/\_,_/_/ /_/\_\   version 2.2.0
+          /_/
+
+    Using Python version 3.6.3 (default, Oct  3 2017 21:45:48)
+    SparkSession available as 'spark'.
+    >>> from pyspark.sql.types import StructType, StructField, DoubleType, StringType
+    >>> schema = StructType([
+            StructField('sepal_length', DoubleType()),
+            StructField('sepal_width', DoubleType()),
+            StructField('petal_length', DoubleType()),
+            StructField('petal_width', DoubleType()),
+            StructField('class', StringType())
+        ])
+    >>> df = spark.read.csv('data/iris.data', schema=schema)
+    >>> df
+    DataFrame[sepal_length: double, sepal_width: double, petal_length: double, petal_width: double, class: string]
+    >>> print('DataFrame has {} rows'.format(df.count()))
+    DataFrame has 150 rows
+    >>> df.show()
+    +------------+-----------+------------+-----------+-----------+
+    |sepal_length|sepal_width|petal_length|petal_width|      class|
+    +------------+-----------+------------+-----------+-----------+
+    |         5.1|        3.5|         1.4|        0.2|Iris-setosa|
+    |         4.9|        3.0|         1.4|        0.2|Iris-setosa|
+    |         4.7|        3.2|         1.3|        0.2|Iris-setosa|
+    |         4.6|        3.1|         1.5|        0.2|Iris-setosa|
+    |         5.0|        3.6|         1.4|        0.2|Iris-setosa|
+    |         5.4|        3.9|         1.7|        0.4|Iris-setosa|
+    |         4.6|        3.4|         1.4|        0.3|Iris-setosa|
+    |         5.0|        3.4|         1.5|        0.2|Iris-setosa|
+    |         4.4|        2.9|         1.4|        0.2|Iris-setosa|
+    |         4.9|        3.1|         1.5|        0.1|Iris-setosa|
+    |         5.4|        3.7|         1.5|        0.2|Iris-setosa|
+    |         4.8|        3.4|         1.6|        0.2|Iris-setosa|
+    |         4.8|        3.0|         1.4|        0.1|Iris-setosa|
+    |         4.3|        3.0|         1.1|        0.1|Iris-setosa|
+    |         5.8|        4.0|         1.2|        0.2|Iris-setosa|
+    |         5.7|        4.4|         1.5|        0.4|Iris-setosa|
+    |         5.4|        3.9|         1.3|        0.4|Iris-setosa|
+    |         5.1|        3.5|         1.4|        0.3|Iris-setosa|
+    |         5.7|        3.8|         1.7|        0.3|Iris-setosa|
+    |         5.1|        3.8|         1.5|        0.3|Iris-setosa|
+    +------------+-----------+------------+-----------+-----------+
+    only showing top 20 rows
+
+To query the Iris data set with SQL we can, for instance, register the
+above DataFrame `df` as a SQL view or write it as Hive table to our Hadoop
+cluster (I reckon there are further options).
+
+To register `df` as a SQL view and run queries on it (reusing the above PySpark session):
+
+    >>> df.createOrReplaceTempView('iris')
+    >>> sql_df = spark.sql('SELECT * FROM iris WHERE sepal_length > 5.')
+    >>> sql_df.count()
+    118
+    >>> sql_df.show()
+    +------------+-----------+------------+-----------+-----------+
+    |sepal_length|sepal_width|petal_length|petal_width|      class|
+    +------------+-----------+------------+-----------+-----------+
+    |         5.1|        3.5|         1.4|        0.2|Iris-setosa|
+    |         5.4|        3.9|         1.7|        0.4|Iris-setosa|
+    |         5.4|        3.7|         1.5|        0.2|Iris-setosa|
+    |         5.8|        4.0|         1.2|        0.2|Iris-setosa|
+    |         5.7|        4.4|         1.5|        0.4|Iris-setosa|
+    |         5.4|        3.9|         1.3|        0.4|Iris-setosa|
+    |         5.1|        3.5|         1.4|        0.3|Iris-setosa|
+    |         5.7|        3.8|         1.7|        0.3|Iris-setosa|
+    |         5.1|        3.8|         1.5|        0.3|Iris-setosa|
+    |         5.4|        3.4|         1.7|        0.2|Iris-setosa|
+    |         5.1|        3.7|         1.5|        0.4|Iris-setosa|
+    |         5.1|        3.3|         1.7|        0.5|Iris-setosa|
+    |         5.2|        3.5|         1.5|        0.2|Iris-setosa|
+    |         5.2|        3.4|         1.4|        0.2|Iris-setosa|
+    |         5.4|        3.4|         1.5|        0.4|Iris-setosa|
+    |         5.2|        4.1|         1.5|        0.1|Iris-setosa|
+    |         5.5|        4.2|         1.4|        0.2|Iris-setosa|
+    |         5.5|        3.5|         1.3|        0.2|Iris-setosa|
+    |         5.1|        3.4|         1.5|        0.2|Iris-setosa|
+    |         5.1|        3.8|         1.9|        0.4|Iris-setosa|
+    +------------+-----------+------------+-----------+-----------+
+    only showing top 20 rows
+
+To store `df` as a Hive table we reuse the above SQL view:
+
+    >>> spark.sql('CREATE TABLE iris AS SELECT * FROM iris')
+
+**Note**: Our current Spark installation does not offer support for Hive.
+I need to revisit this and enable support for YARN-executed Hive queries
+initiated through Spark.
+
+#### References
+
+- [Spark SQL guide and examples](https://spark.apache.org/docs/latest/sql-programming-guide.html)
+- [Hive support for Spark](http://spark.apache.org/docs/1.6.3/sql-programming-guide.html#hive-tables)
+
 ### Tez
 
 Execution engine on top of YARN that translates user requests to directed acyclic
@@ -437,8 +566,6 @@ you should find it in the `default` Hive database.
 ### Presto
 
 ### Drill
-
-### Spark SQL
 
 ### Phoenix
 
