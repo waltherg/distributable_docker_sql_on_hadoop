@@ -563,6 +563,44 @@ you should find it in the `default` Hive database.
 
 ### Impala
 
+Impala is a massively parallel SQL query engine that sits on top an existing
+Hadoop cluster.
+It allows users to issue quickly executed (low-latency) SQL queries on data stored
+in e.g. HDFS or HBase.
+It further interacts well with Hive - reusing the metadata maintained by Hive in its
+metastore.
+
+Impala consists of three components:
+
+- Impala daemon
+    - The daemon process needs to run on each HDFS datanode
+    - Queries are submitted to any HDFS datanode / Impala daemon
+    - The daemon a query / job was submitted to acts as coordinator for the given job
+    - The coordinator parallelizes the query and distributes the resultant work across the
+      cluster of Impala daemons / HDFS datanodes
+- Impala statestore
+    - Keeps track of the health of each HDFS datanode / Impala daemon
+    - The datanodes communicate their health to the statestore
+    - When a datanode becomes unavailable the statestore communicates this with the
+      remaining HDFS datastores / Impala daemons
+- Impala catalog service
+    - When an Impala daemon creates, alters, or drops any object this change in
+      metadata is communicated with the catalog service
+    - The catalog service broadcasts these metadata changes to all Impala daemons
+
+**Note**: We amend our `hadoop-node` hosts
+(described [here](https://github.com/waltherg/distributable_docker_sql_on_hadoop#yet-another-resource-negotiator-yarn))
+with Impala daemon processes.
+The Impala statestore and catalog service are each run in a separate container.
+
+It further provides an interactive Impala shell.
+
+#### References
+
+- [Impala components](https://impala.apache.org/docs/build/html/topics/impala_components.html)
+- [Impala in the Hadoop ecosystem](https://impala.apache.org/docs/build/html/topics/impala_hadoop.html)
+- [Impala requirements](https://impala.apache.org/docs/build/html/topics/impala_prereqs.html)
+
 ### Presto
 
 ### Drill
