@@ -600,6 +600,11 @@ It further provides an interactive Impala shell.
 - [Impala components](https://impala.apache.org/docs/build/html/topics/impala_components.html)
 - [Impala in the Hadoop ecosystem](https://impala.apache.org/docs/build/html/topics/impala_hadoop.html)
 - [Impala requirements](https://impala.apache.org/docs/build/html/topics/impala_prereqs.html)
+- [Short circuit reads and block location tracking](
+    https://impala.apache.org/docs/build/html/topics/impala_config_performance.html
+  )
+- [Starting Impala](https://impala.apache.org/docs/build/html/topics/impala_processes.html)
+- [Impala startup options](https://impala.apache.org/docs/build/html/topics/impala_config_options.html#config_options)
 
 ### Presto
 
