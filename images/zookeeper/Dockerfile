@@ -18,6 +18,7 @@ RUN echo "Install system requirements ..." \
 
 RUN echo "Download and extract ZooKeeper package ..." \
     && wget ${apache_mirror}/zookeeper/zookeeper-${zookeeper_version}/zookeeper-${zookeeper_version}.tar.gz \
+       -O zookeeper-${zookeeper_version}.tar.gz \
     && tar xvf zookeeper-${zookeeper_version}.tar.gz --gzip \
     && mv zookeeper-${zookeeper_version} ${zookeeper_root} \
     && rm zookeeper-${zookeeper_version}.tar.gz

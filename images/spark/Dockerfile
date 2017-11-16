@@ -12,6 +12,7 @@ ENV PATH=$SPARK_HOME/bin:$PATH
 
 RUN echo "Download and extract Spark package ..." \
     && wget ${apache_mirror}/spark/spark-${spark_version}/spark-${spark_version}-bin-without-hadoop.tgz \
+       -O spark-${spark_version}-bin-without-hadoop.tgz \
     && tar xvf spark-${spark_version}-bin-without-hadoop.tgz --gzip \
     && mv spark-${spark_version}-bin-without-hadoop ${spark_root} \
     && rm spark-${spark_version}-bin-without-hadoop.tgz

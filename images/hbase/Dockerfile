@@ -18,6 +18,7 @@ RUN echo "Install system requirements ..." \
 
 RUN echo "Download and extract HBase package ..." \
     && wget ${apache_mirror}/hbase/${hbase_version}/hbase-${hbase_version}-bin.tar.gz \
+       -O hbase-${hbase_version}-bin.tar.gz \
     && tar xvf hbase-${hbase_version}-bin.tar.gz --gzip \
     && mv hbase-${hbase_version} ${hbase_root} \
     && rm hbase-${hbase_version}-bin.tar.gz

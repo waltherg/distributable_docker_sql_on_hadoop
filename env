@@ -1,4 +1,4 @@
-export apache_mirror=http://mirror.dkd.de/apache
+export apache_mirror=http://www.apache.org/dyn/closer.cgi\?action\=download\&filename\=
 export hadoop_image_name=waltherg_hadoop
 export hadoop_version=2.8.2
 export hadoop_root=/hadoop

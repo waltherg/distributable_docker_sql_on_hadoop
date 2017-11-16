@@ -28,6 +28,7 @@ RUN echo "Install required system packages ..." \
 
 RUN echo "Download and extract Hadoop source ..." \
     && wget ${apache_mirror}/hadoop/common/hadoop-${hadoop_version}/hadoop-${hadoop_version}.tar.gz \
+       -O hadoop-${hadoop_version}.tar.gz \
     && tar xvf hadoop-${hadoop_version}.tar.gz --gzip \
     && mv hadoop-${hadoop_version} ${hadoop_root} \
     && rm hadoop-${hadoop_version}.tar.gz

@@ -12,6 +12,7 @@ ENV PATH=$HIVE_HOME/bin:$PATH
 
 RUN echo "Download and extract Hive package ..." \
     && wget ${apache_mirror}/hive/hive-${hive_version}/apache-hive-${hive_version}-bin.tar.gz \
+       -O apache-hive-${hive_version}-bin.tar.gz \
     && tar xvf apache-hive-${hive_version}-bin.tar.gz --gzip \
     && mv apache-hive-${hive_version}-bin ${hive_root} \
     && rm apache-hive-${hive_version}-bin.tar.gz
